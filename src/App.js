@@ -1,5 +1,4 @@
 import { useState } from "react";
-import "./App.css";
 import { Box, Center, ChakraProvider, Grid } from "@chakra-ui/react";
 
 function App() {
