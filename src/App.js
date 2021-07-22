@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Box, Center, ChakraProvider, Grid } from "@chakra-ui/react";
+import { Box, Center, Circle, ChakraProvider, Grid } from "@chakra-ui/react";
 
 function App() {
 	const [background0, setBackground0] = useState("#171923");
@@ -14,7 +14,6 @@ function App() {
 	const [counter, setCounter] = useState(0);
 
 	function handleBoxColor(id) {
-		console.log("Entro con el id: " + id);
 		if (id % 2 === 0) {
 			// if the id of the box is even then call to the handleBoxColor function
 			handleBoxColorEven(id);
