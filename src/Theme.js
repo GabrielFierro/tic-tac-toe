@@ -14,11 +14,6 @@ const theme = extendTheme({
 			},
 		}),
 	},
-	colors: {
-		brand: {
-			100: "#ED64A6",
-		},
-	},
 	fonts: {
 		body: "Montserrat",
 		fontWeight: 700,
