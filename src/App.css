@@ -1,5 +1,5 @@
 .circle {
-	border: 10px solid #4fd1c5;
+	border: 10px solid #f6e05e;
 	border-radius: 50%;
 	height: 110px;
 	margin-left: 40px;
@@ -9,7 +9,7 @@
 }
 
 #cross {
-	background: #4fd1c5;
+	background: #ed64a6;
 	height: 100px;
 	position: absolute;
 	width: 20px;
@@ -18,7 +18,7 @@
 	transform: rotate(45deg);
 }
 #cross:after {
-	background: #4fd1c5;
+	background: #ed64a6;
 	content: "";
 	height: 20px;
 	left: -40px;
