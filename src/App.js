@@ -1,206 +1,154 @@
 import { useState } from "react";
-import { Box, Center, Grid, Text } from "@chakra-ui/react";
+import { Box, Button, Center, Grid, Text, Typography } from "@chakra-ui/react";
 import "./App.css";
 
 function App() {
+	// Zone of the states
 	const [background0, setBackground0] = useState("primary");
-	const [counter, setCounter] = useState(0);
-	const [activeCircle0, setActiveCircle0] = useState(false);
-	const [activeCircle1, setActiveCircle1] = useState(false);
-	const [activeCircle2, setActiveCircle2] = useState(false);
-	const [activeCircle3, setActiveCircle3] = useState(false);
-	const [activeCircle4, setActiveCircle4] = useState(false);
-	const [activeCross0, setActiveCross0] = useState(false);
-	const [activeCross1, setActiveCross1] = useState(false);
-	const [activeCross2, setActiveCross2] = useState(false);
-	const [activeCross3, setActiveCross3] = useState(false);
+	const [turn, setTurn] = useState("X"); // This state set the turn of the user
+	const [cells, setCells] = useState(Array(9).fill(""));
+	const [winner, setWinner] = useState();
 
-	function handlesShapes() {
-		if (counter % 2 === 0) {
-			// if the id of the box is even then call to the handleBoxColor function
-			//handleBoxColorEven(id);
-			handleCircle(counter);
+	const handleReset = () => {
+		setWinner(null);
+		setTurn("X");
+		setCells(Array(9).fill(""));
+	};
+
+	const checkForWinner = (squares) => {
+		let combos = {
+			across: [
+				[0, 1, 2],
+				[3, 4, 5],
+				[6, 7, 8],
+			],
+			down: [
+				[0, 3, 6],
+				[1, 4, 7],
+				[2, 5, 8],
+			],
+			diagnol: [
+				[0, 4, 8],
+				[2, 4, 6],
+			],
+		};
+
+		for (let combo in combos) {
+			combos[combo].forEach((pattern) => {
+				if (
+					squares[pattern[0]] === "" ||
+					squares[pattern[1]] === "" ||
+					squares[pattern[2]] === ""
+				) {
+					// do nothing
+				} else if (
+					squares[pattern[0]] === squares[pattern[1]] &&
+					squares[pattern[1]] === squares[pattern[2]]
+				) {
+					setWinner(squares[pattern[0]]);
+				}
+			});
+		}
+	};
+	// Arrow function that handle the click when the user click on a cell.
+	// Then, when the user click on the cell, we show the number of the cell.
+	const handleClick = (num) => {
+		if (cells[num] !== "") {
+			// this condicional check if a cell was clicked previously or not.
+			// in case of that was clicked, display the alert message already clicked.
+			alert("Already clicked");
+			return;
+		}
+
+		let squares = [...cells];
+
+		if (turn === "X") {
+			squares[num] = "X";
+			setTurn("0");
 		} else {
-			// if the id of the box is odd then call to the handleBoxColor2 function
-			handleCross(counter);
+			squares[num] = "0";
+			setTurn("X");
 		}
-	}
 
-	function drawACircle() {
-		// function that return a div with the class circle that display that shape
-		return <div className="circle"></div>;
-	}
+		checkForWinner(squares);
+		setCells(squares);
+	};
 
-	function drawACross() {
-		// function that return a div with the id cross that display that shape
-		return <div id="cross"></div>;
-	}
-
-	function handleCircle(counter) {
-		switch (counter) {
-			case 0:
-				setActiveCircle0(true);
-				setCounter(counter + 1);
-				break;
-			case 2:
-				setActiveCircle1(true);
-				setCounter(counter + 1);
-				break;
-			case 4:
-				setActiveCircle2(true);
-				setCounter(counter + 1);
-				break;
-			case 6:
-				setActiveCircle3(true);
-				setCounter(counter + 1);
-				break;
-			case 8:
-				setActiveCircle4(true);
-				setCounter(counter + 1);
-				break;
-			default:
-				break;
-		}
-	}
-
-	function handleCross(counter) {
-		switch (counter) {
-			case 1:
-				setActiveCross0(true);
-				setCounter(counter + 1);
-				break;
-			case 3:
-				setActiveCross1(true);
-				setCounter(counter + 1);
-				break;
-			case 5:
-				setActiveCross2(true);
-				setCounter(counter + 1);
-				break;
-			case 7:
-				setActiveCross3(true);
-				setCounter(counter + 1);
-				break;
-			default:
-				break;
-		}
-	}
+	// Component that represent a Cell with a data cell. Pass the num value by paramater
+	// to pass to the function handleClick this value
+	const Cell = ({ num }) => {
+		return (
+			<Box
+				sx={{ width: "100%", height: "100%" }}
+				bg={background0}
+				borderColor="#00B5D8"
+				borderWidth="3px"
+				onClick={() => handleClick(num)}
+				paddingBottom="12px"
+			>
+				<Center>
+					<Text color="#F6E05E" fontSize="78px" marginBottom="-100%">
+						{cells[num]}
+					</Text>
+				</Center>
+			</Box>
+		);
+	};
 
 	return (
 		<Grid w="100%" h="100%" bg="primary">
 			<Center>
-				<Text color="primary" fontSize="98px">
+				<Text color="primary" fontSize="64px">
 					TA-TE-TI
+				</Text>
+			</Center>
+			<Center>
+				<Text color="primary" fontSize="32px">
+					Turn: {turn} {" / "}
+				</Text>
+				<Text color="primary" fontSize="32px">
+					{winner && (
+						<>
+							<Text style={{ color: "#ED64A6" }}>
+								{winner} <span color="primary">is the winner</span>
+							</Text>
+						</>
+					)}
 				</Text>
 			</Center>
 			<Center h="100%" bg="primary">
 				<Grid
-					w="500px"
-					h="500px"
-					border="7px"
+					w="450px"
+					h="450px"
 					borderColor="#ED64A6"
 					templateColumns="repeat(3, 1fr)"
 				>
-					<Box
-						w="100%"
-						h="100%"
-						id={0}
-						bg={background0}
-						borderColor="#00B5D8"
-						borderWidth="3px"
-						onClick={() => handlesShapes()}
-					>
-						{activeCircle0 ? drawACircle() : null}
-					</Box>
-					<Box
-						w="100%"
-						h="100%"
-						id={1}
-						bg={background0}
-						borderColor="#00B5D8"
-						borderWidth="3px"
-						onClick={() => handlesShapes()}
-					>
-						{activeCross0 ? drawACross() : null}
-					</Box>
-					<Box
-						w="100%"
-						h="100%"
-						id={2}
-						bg={background0}
-						borderColor="#00B5D8"
-						borderWidth="3px"
-						onClick={() => handlesShapes()}
-					>
-						{activeCircle1 ? drawACircle() : null}
-					</Box>
-					<Box
-						w="100%"
-						h="100%"
-						id={3}
-						bg={background0}
-						borderColor="#00B5D8"
-						borderWidth="3px"
-						onClick={() => handlesShapes()}
-					>
-						{activeCross1 ? drawACross() : null}
-					</Box>
-					<Box
-						w="100%"
-						h="100%"
-						id={4}
-						bg={background0}
-						borderColor="#00B5D8"
-						borderWidth="3px"
-						onClick={() => handlesShapes()}
-					>
-						{activeCircle2 ? drawACircle() : null}
-					</Box>
-					<Box
-						w="100%"
-						h="100%"
-						id={5}
-						bg={background0}
-						borderColor="#00B5D8"
-						borderWidth="3px"
-						onClick={() => handlesShapes()}
-					>
-						{activeCross2 ? drawACross() : null}
-					</Box>
-					<Box
-						w="100%"
-						h="100%"
-						id={6}
-						bg={background0}
-						borderColor="#00B5D8"
-						borderWidth="3px"
-						onClick={() => handlesShapes()}
-					>
-						{activeCircle3 ? drawACircle() : null}
-					</Box>
-					<Box
-						w="100%"
-						h="100%"
-						id={7}
-						bg={background0}
-						borderColor="#00B5D8"
-						borderWidth="3px"
-						onClick={() => handlesShapes()}
-					>
-						{activeCross3 ? drawACross() : null}
-					</Box>
-					<Box
-						w="100%"
-						h="100%"
-						id={8}
-						bg={background0}
-						borderColor="#00B5D8"
-						borderWidth="3px"
-						onClick={() => handlesShapes()}
-					>
-						{activeCircle4 ? drawACircle() : null}
-					</Box>
+					<Cell num={0} />
+					<Cell num={1} />
+					<Cell num={2} />
+					<Cell num={3} />
+					<Cell num={4} />
+					<Cell num={5} />
+					<Cell num={6} />
+					<Cell num={7} />
+					<Cell num={8} />
 				</Grid>
+			</Center>
+			<Center h="100%" bg="primary">
+				<Button
+					style={{
+						borderRadius: 10,
+						backgroundColor: "#ed64a6",
+						color: "#f7f7fe",
+						padding: "18px 36px",
+						marginTop: "5px",
+						fontSize: "16px",
+						boxShadow: "1px 1px 15px #0BC5EA",
+					}}
+					onClick={() => handleReset()}
+				>
+					Play again
+				</Button>
 			</Center>
 		</Grid>
 	);
